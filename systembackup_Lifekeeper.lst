@@ -1,0 +1,19 @@
+#区切り文字=","
+# $1：バックアップ対象の物理ディスク名
+# $2：バックアップ対象のPV名
+# $3：バックアップ対象のVG名
+# $4：バックアップ対象のLV名
+# $5：バックアップ対象領域
+#    xfsdump：デバイスファイルを指定
+#    tar：マウントポイントを指定    
+# $6：LVMスナップショット取得対象
+#    1：取得する
+#    2：取得しない
+# $7：バックアップ取得コマンド
+# $8：バックアップファイル名
+/dev/nvme0n1,/dev/nvme0n1p2,rhel,root,/dev/mapper/rhel-root,1,xfsdump,root
+/dev/nvme0n1,/dev/nvme0n1p2,rhel,root_lv1,/dev/mapper/rhel-root_lv1,1,xfsdump,root_lv1
+/dev/nvme0n1,/dev/nvme0n1p2,rhel,root_lv2,/dev/mapper/rhel-root_lv2,1,xfsdump,root_lv2
+/dev/nvme0n1,/dev/nvme0n1p2,rhel,root_lv3,/dev/mapper/rhel-root_lv3,1,xfsdump,root_lv3
+/dev/nvme0n1,,,,/boot,2,tar,boot
+/dev/nvme0n2,/dev/nvme0n2p1,rhel,,,,,

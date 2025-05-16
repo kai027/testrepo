@@ -1,0 +1,306 @@
+[root@Lifekeeper work]# blkid
+/dev/nvme0n1p1: UUID="d358f1aa-13d7-48ca-bbe8-d769df07f975" BLOCK_SIZE="512" TYPE="xfs" PARTUUID="1ccd3e38-01"
+/dev/nvme0n1p2: UUID="EMlyKX-cJyA-7WY9-ThAw-Snbl-E346-IfVKkJ" TYPE="LVM2_member" PARTUUID="1ccd3e38-02"
+/dev/mapper/rhel-root: UUID="5b42a81e-8ee4-40ff-b192-8321c619fda6" BLOCK_SIZE="512" TYPE="xfs"
+/dev/mapper/rhel-swap: UUID="c0d091a7-a7ac-4c0b-9214-72ddb3c06982" TYPE="swap"
+/dev/nvme0n1: PTUUID="1ccd3e38" PTTYPE="dos"
+/dev/nvme0n2: PTUUID="7c7111f6-c87e-4863-b0c7-fb1751b9480c" PTTYPE="gpt"
+/dev/nvme0n2p1: UUID="naJMHL-Jw7I-8fzr-J49p-VGRT-NbqD-WxqGu1" TYPE="LVM2_member" PARTUUID="daa695c3-1cda-4a4e-952b-cdb607791e34"
+/dev/mapper/rhel-snap: UUID="5b42a81e-8ee4-40ff-b192-8321c619fda6" BLOCK_SIZE="512" TYPE="xfs"
+
+
+
+[root@Lifekeeper work]# fdisk -l
+ディスク /dev/nvme0n1: 20 GiB, 21474836480 バイト, 41943040 セクタ
+単位: セクタ (1 * 512 = 512 バイト)
+セクタサイズ (論理 / 物理): 512 バイト / 512 バイト
+I/O サイズ (最小 / 推奨): 512 バイト / 512 バイト
+ディスクラベルのタイプ: dos
+ディスク識別子: 0x1ccd3e38
+
+デバイス       起動 開始位置 終了位置   セクタ サイズ Id タイプ
+/dev/nvme0n1p1 *        2048  2099199  2097152     1G 83 Linux
+/dev/nvme0n1p2       2099200 41943039 39843840    19G 8e Linux LVM
+
+
+ディスク /dev/nvme0n2: 10 GiB, 10737418240 バイト, 20971520 セクタ
+単位: セクタ (1 * 512 = 512 バイト)
+セクタサイズ (論理 / 物理): 512 バイト / 512 バイト
+I/O サイズ (最小 / 推奨): 512 バイト / 512 バイト
+ディスクラベルのタイプ: gpt
+ディスク識別子: 7C7111F6-C87E-4863-B0C7-FB1751B9480C
+
+デバイス       開始位置 終了位置   セクタ サイズ タイプ
+/dev/nvme0n2p1     2048 20969471 20967424    10G Linux ファイルシステム
+
+
+
+
+ディスク /dev/mapper/rhel-root: 17 GiB, 18249416704 バイト, 35643392 セクタ
+単位: セクタ (1 * 512 = 512 バイト)
+セクタサイズ (論理 / 物理): 512 バイト / 512 バイト
+I/O サイズ (最小 / 推奨): 512 バイト / 512 バイト
+
+
+ディスク /dev/mapper/rhel-swap: 2 GiB, 2147483648 バイト, 4194304 セクタ
+単位: セクタ (1 * 512 = 512 バイト)
+セクタサイズ (論理 / 物理): 512 バイト / 512 バイト
+I/O サイズ (最小 / 推奨): 512 バイト / 512 バイト
+
+
+
+[root@Lifekeeper work]# parted -l
+モデル: NVMe Device (nvme)
+ディスク /dev/nvme0n1: 21.5GB
+セクタサイズ (論理/物理): 512B/512B
+パーティションテーブル: msdos
+ディスクフラグ:
+
+番号  開始    終了    サイズ  タイプ   ファイルシステム  フラグ
+ 1    1049kB  1075MB  1074MB  primary  xfs               boot
+ 2    1075MB  21.5GB  20.4GB  primary                    lvm
+
+
+モデル: NVMe Device (nvme)
+ディスク /dev/nvme0n2: 10.7GB
+セクタサイズ (論理/物理): 512B/512B
+パーティションテーブル: gpt
+ディスクフラグ:
+
+番号  開始    終了    サイズ  ファイルシステム  名前  フラグ
+ 1    1049kB  10.7GB  10.7GB
+
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Register this system with Red Hat Insights: insights-client --register
+Create an account or view all your systems at https://red.ht/insights-dashboard
+Last login: Sat Apr 19 20:59:34 2025 from 192.168.0.20
+[root@Lifekeeper ~]#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[root@Lifekeeper ~]# pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/nvme0n3p2
+  VG Name               rhel2
+  PV Size               <19.00 GiB / not usable 3.00 MiB
+  Allocatable           yes (but full)
+  PE Size               4.00 MiB
+  Total PE              4863
+  Free PE               0
+  Allocated PE          4863
+  PV UUID               2BY43u-Z6XM-scHA-alwz-fF3V-i2kX-RMZwWB
+
+  --- Physical volume ---
+  PV Name               /dev/nvme0n1p2
+  VG Name               rhel
+  PV Size               <19.00 GiB / not usable 3.00 MiB
+  Allocatable           yes (but full)
+  PE Size               4.00 MiB
+  Total PE              4863
+  Free PE               0
+  Allocated PE          4863
+  PV UUID               EMlyKX-cJyA-7WY9-ThAw-Snbl-E346-IfVKkJ
+
+  --- Physical volume ---
+  PV Name               /dev/nvme0n2p1
+  VG Name               rhel
+  PV Size               <10.00 GiB / not usable 2.00 MiB
+  Allocatable           yes
+  PE Size               4.00 MiB
+  Total PE              2559
+  Free PE               2559
+  Allocated PE          0
+  PV UUID               naJMHL-Jw7I-8fzr-J49p-VGRT-NbqD-WxqGu1
+
+[root@Lifekeeper ~]#
+[root@Lifekeeper ~]#
+[root@Lifekeeper ~]# vgdisplay
+  --- Volume group ---
+  VG Name               rhel2
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  2
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                1
+  Open LV               0
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               <19.00 GiB
+  PE Size               4.00 MiB
+  Total PE              4863
+  Alloc PE / Size       4863 / <19.00 GiB
+  Free  PE / Size       0 / 0
+  VG UUID               VsaPut-LECL-zFvP-5cri-KOM7-ziTA-5X8AxF
+
+  --- Volume group ---
+  VG Name               rhel
+  System ID
+  Format                lvm2
+  Metadata Areas        2
+  Metadata Sequence No  8
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                2
+  Open LV               2
+  Max PV                0
+  Cur PV                2
+  Act PV                2
+  VG Size               28.99 GiB
+  PE Size               4.00 MiB
+  Total PE              7422
+  Alloc PE / Size       4863 / <19.00 GiB
+  Free  PE / Size       2559 / <10.00 GiB
+  VG UUID               G6Hy01-B252-1cGM-lV1W-d4bx-bNnN-QDK1Ac
+
+[root@Lifekeeper ~]#
+[root@Lifekeeper ~]#
+[root@Lifekeeper ~]# lvdisplay
+  --- Logical volume ---
+  LV Path                /dev/rhel2/root2
+  LV Name                root2
+  VG Name                rhel2
+  LV UUID                UPsZMs-Afhc-0Q6q-6a21-JHkc-I9NG-e3pqDS
+  LV Write Access        read/write
+  LV Creation host, time localhost.localdomain, 2025-04-19 19:37:45 +0900
+  LV Status              available
+  # open                 0
+  LV Size                <19.00 GiB
+  Current LE             4863
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     8192
+  Block device           253:2
+
+  --- Logical volume ---
+  LV Path                /dev/rhel/swap
+  LV Name                swap
+  VG Name                rhel
+  LV UUID                o3OPZf-QxeS-woe0-ajaY-1ve2-k4g5-JF0j6e
+  LV Write Access        read/write
+  LV Creation host, time localhost.localdomain, 2023-11-20 23:32:45 +0900
+  LV Status              available
+  # open                 2
+  LV Size                2.00 GiB
+  Current LE             512
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     8192
+  Block device           253:1
+
+  --- Logical volume ---
+  LV Path                /dev/rhel/root
+  LV Name                root
+  VG Name                rhel
+  LV UUID                zS0THs-Yhfz-dqGO-4hZe-CvAM-eU6z-F353pd
+  LV Write Access        read/write
+  LV Creation host, time localhost.localdomain, 2023-11-20 23:32:46 +0900
+  LV Status              available
+  # open                 1
+  LV Size                <17.00 GiB
+  Current LE             4351
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     8192
+  Block device           253:0
+
+[root@Lifekeeper ~]#
+[root@Lifekeeper ~]# cat /etc/fstab
+
+#
+# /etc/fstab
+# Created by anaconda on Mon Nov 20 14:32:48 2023
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk/'.
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info.
+#
+# After editing this file, run 'systemctl daemon-reload' to update systemd
+# units generated from this file.
+#
+/dev/mapper/rhel2-root2   /                       xfs     defaults        0 0
+UUID=d358f1aa-13d7-48ca-bbe8-d769df07f975 /boot                   xfs     defaults        0 0
+/dev/mapper/rhel-swap   none                    swap    defaults        0 0
+[root@Lifekeeper ~]# mount
+sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)
+proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
+devtmpfs on /dev type devtmpfs (rw,nosuid,size=1866456k,nr_inodes=466614,mode=755)
+securityfs on /sys/kernel/security type securityfs (rw,nosuid,nodev,noexec,relatime)
+tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev)
+devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000)
+tmpfs on /run type tmpfs (rw,nosuid,nodev,mode=755)
+tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)
+cgroup on /sys/fs/cgroup/systemd type cgroup (rw,nosuid,nodev,noexec,relatime,xattr,release_agent=/usr/lib/systemd/systemd-cgroups-agent,name=systemd)
+pstore on /sys/fs/pstore type pstore (rw,nosuid,nodev,noexec,relatime)
+bpf on /sys/fs/bpf type bpf (rw,nosuid,nodev,noexec,relatime,mode=700)
+cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,blkio)
+cgroup on /sys/fs/cgroup/net_cls,net_prio type cgroup (rw,nosuid,nodev,noexec,relatime,net_cls,net_prio)
+cgroup on /sys/fs/cgroup/cpu,cpuacct type cgroup (rw,nosuid,nodev,noexec,relatime,cpu,cpuacct)
+cgroup on /sys/fs/cgroup/devices type cgroup (rw,nosuid,nodev,noexec,relatime,devices)
+cgroup on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,memory)
+cgroup on /sys/fs/cgroup/freezer type cgroup (rw,nosuid,nodev,noexec,relatime,freezer)
+cgroup on /sys/fs/cgroup/pids type cgroup (rw,nosuid,nodev,noexec,relatime,pids)
+cgroup on /sys/fs/cgroup/perf_event type cgroup (rw,nosuid,nodev,noexec,relatime,perf_event)
+cgroup on /sys/fs/cgroup/rdma type cgroup (rw,nosuid,nodev,noexec,relatime,rdma)
+cgroup on /sys/fs/cgroup/cpuset type cgroup (rw,nosuid,nodev,noexec,relatime,cpuset)
+cgroup on /sys/fs/cgroup/hugetlb type cgroup (rw,nosuid,nodev,noexec,relatime,hugetlb)
+none on /sys/kernel/tracing type tracefs (rw,relatime)
+configfs on /sys/kernel/config type configfs (rw,relatime)
+/dev/mapper/rhel-root on / type xfs (rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+systemd-1 on /proc/sys/fs/binfmt_misc type autofs (rw,relatime,fd=28,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=27717)
+debugfs on /sys/kernel/debug type debugfs (rw,relatime)
+mqueue on /dev/mqueue type mqueue (rw,relatime)
+hugetlbfs on /dev/hugepages type hugetlbfs (rw,relatime,pagesize=2M)
+fusectl on /sys/fs/fuse/connections type fusectl (rw,relatime)
+vmware-vmblock on /run/vmblock-fuse type fuse.vmware-vmblock (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other)
+/dev/nvme0n1p1 on /boot type xfs (rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw,relatime)
+tmpfs on /run/user/42 type tmpfs (rw,nosuid,nodev,relatime,size=379344k,mode=700,uid=42,gid=42)
+tmpfs on /run/user/0 type tmpfs (rw,nosuid,nodev,relatime,size=379344k,mode=700)
+[root@Lifekeeper ~]# blkid
+/dev/nvme0n1: PTUUID="1ccd3e38" PTTYPE="dos"
+/dev/nvme0n1p1: UUID="d358f1aa-13d7-48ca-bbe8-d769df07f975" BLOCK_SIZE="512" TYPE="xfs" PARTUUID="1ccd3e38-01"
+/dev/nvme0n1p2: UUID="EMlyKX-cJyA-7WY9-ThAw-Snbl-E346-IfVKkJ" TYPE="LVM2_member" PARTUUID="1ccd3e38-02"
+/dev/nvme0n2: PTUUID="7c7111f6-c87e-4863-b0c7-fb1751b9480c" PTTYPE="gpt"
+/dev/nvme0n2p1: UUID="naJMHL-Jw7I-8fzr-J49p-VGRT-NbqD-WxqGu1" TYPE="LVM2_member" PARTUUID="daa695c3-1cda-4a4e-952b-cdb607791e34"
+/dev/nvme0n3: PTUUID="1ccd3e38" PTTYPE="dos"
+/dev/nvme0n3p1: UUID="49910cb4-eb50-4eb2-ac5a-d8b543b7b043" BLOCK_SIZE="512" TYPE="xfs" PARTUUID="1ccd3e38-01"
+/dev/nvme0n3p2: UUID="2BY43u-Z6XM-scHA-alwz-fF3V-i2kX-RMZwWB" TYPE="LVM2_member" PARTUUID="1ccd3e38-02"
+/dev/sr0: BLOCK_SIZE="2048" UUID="2022-06-28-07-51-01-00" LABEL="RHEL-8-6-0-BaseOS-x86_64" TYPE="iso9660" PTUUID="2a8ef54b" PTTYPE="dos"
+/dev/mapper/rhel-root: UUID="5b42a81e-8ee4-40ff-b192-8321c619fda6" BLOCK_SIZE="512" TYPE="xfs"
+/dev/mapper/rhel-swap: UUID="c0d091a7-a7ac-4c0b-9214-72ddb3c06982" TYPE="swap"
+/dev/mapper/rhel2-root2: UUID="e7c2c4bd-31b8-4a94-9d4a-1ff6ccfbfb2a" BLOCK_SIZE="512" TYPE="xfs"
+[root@Lifekeeper ~]#

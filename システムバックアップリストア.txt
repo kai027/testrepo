@@ -1,0 +1,202 @@
+■スナップショット用ディスク追加
+#parted -l
+
+#parted /dev/nvme0n2
+
+(parted)p
+
+(parted) mklabel gpt
+
+(parted)p
+
+(parted) mkpart
+パーティションの名前?  []?
+ファイルシステムの種類?  [ext2]? xfs
+開始? 0%
+終了? 100%
+(parted) p
+
+(parted) quit
+
+# parted -l
+# fdisk -l
+
+# pvdisplay
+
+# pvcreate /dev/nvme0n2p1; echo $?
+
+# pvdisplay
+
+# vgdisplay -v
+
+# vgextend rhel /dev/nvme0n2p1; echo $?
+
+■dump取得
+# vgdisplay -v
+
+# lvcreate -s -l 100%FREE -n snap /dev/rhel/root; echo $?
+-s:スナップショットを作成する
+-l:サイズ指定
+-n:名前指定
+
+# lvscan
+
+# lvdisplay
+
+# mount -t xfs -o ro,nouuid /dev/mapper/rhel-snap /mnt/snap/; echo $?
+
+# df -Ph
+
+# mount -t nfs 192.168.0.92:/work /mnt/nfs/; echo $?
+
+# df -Ph
+
+構成情報バックアップ
+# sfdisk -d /dev/nvme0n1 > /mnt/nfs/sfinfo.dat
+
+# pvdisplay > /bkup/pvdis.dat
+# vgdisplay > /bkup/vgdis.dat
+# cat /etc/fstab > /bkup/fstab.dat
+# mount > /bkup/mount.dat
+# blkid > /bkup/blkid.dat
+# vgcfgbackup VG名 -f /bkup/vgcfg.dat　(/領域にLVMが組まれている場合は実施)
+
+# xfsdump -M root -L backup_20250419 -l 0 -f /work/root.dump /dev/mapper/rhel-snap; echo $?
+# xfsdump -M boot -L backup_20250419 -l 0 -f /work/boot.dump /dev/nvme0n1p1; echo $?
+-M:ラベル(任意の文字列)
+-L:ラベル(任意の文字列)
+-l:レベル(0=完全ダンプ)
+-f:出力先指定
+
+# umount /mnt/snap
+# umount /mnt/nfs
+
+# df -Ph
+
+LVSスナップショット削除
+# lvremove /dev/rhel/snap; echo $?
+
+# lvdisplay
+
+■nfs一時設定
+# ls -ld /etc/exports
+
+# cp -p /etc/exports /etc/exports_org
+
+# cat /etc/exports
+
+# vi /etc/exports
+
+# cat /etc/exports
+
+# diff /etc/exports_org /etc/exports
+
+# systemctl status nfs-server
+
+# systemctl start nfs-server
+
+# systemctl status nfs-server
+
+# systemctl status rpcbind
+
+# exportfs -v
+
+# exportfs -rv
+-r:すべてのディレクトリを再エクスポート
+
+# exportfs -v
+
+アンエクスポート
+# exportfs -ua
+すべてのディレクトリをアンエクスポート
+
+■リストア
+# localectl set-keymap jp106
+
+# nmcli d
+
+# nmcli con mod ens160 ipv4.addresses "192.168.0.91/24"
+
+# nmcli con mod ens160 ipv4.method manual
+
+# nmcli con up ens160
+
+# nmcli d
+
+# ip a
+
+# ping 192.168.0.92
+
+# mkdir /restoredata
+
+# mount -t nfs 192.168.0.92:/work /restoredata; echo $?
+
+# df -Ph
+
+ディスク構成情報をリストア
+# sfdisk (--force) /dev/nvme0n3 < /restoredata/sfinfo.dat; echo $?
+
+# pvcreate /dev/nvme0n3p2; echo $?
+
+# vgcreate rhel2 /dev/nvme0n3p2; echo $?
+
+# lvcreate -l100%FREE -n root2 rhel2; echo $?
+エクステント指定する場合
+# lvcreate -l<LVのCurrent LE> -n root2 rhel2; echo $?
+
+# lvcreate -l<LVのCurrent LE> -n swap rhel; echo $?
+
+# mkfs.xfs /dev/rhel2/root2; echo $?
+# mkfs.xfs /dev/nvme0n3p1; echo $?
+# mkswap /dev/rhel/swap; echo  $?
+
+# mkdir /root_restore
+# mkdir /boot_restore
+
+# mount /dev/rhel2/root2 /root_restore
+
+# df -Ph
+
+# cd /root_restore; pwd
+
+リストア
+# xfsrestore -f /restoredata/root.dump /root_restore; echo $?
+
+# cd /; pwd
+
+# umount /root_restore
+
+# df -Ph
+
+# mount /dev/nvme0n3p1 /boot_restore; echo $?
+
+# df -Ph
+
+# xfsrestore -f /restoredata/boot.dump /boot_restore; echo $?
+
+# umount /boot_restore
+
+# df -Ph
+
+# mount /dev/rhel2/root2 /root_restore
+
+バインド
+# mount --bind /proc /root_restore/proc
+# mount --bind /sys /root_restore/sys
+# mount --bind /dev /root_restore/dev
+
+# chroot /root_restore
+
+# mount /dev/nvme0n3p1 /boot; echo $?
+
+# export NEWUUID=`blkid | grep /dev/nvme0n3p1 | awk '{print $2}' | cut -d '"' -f 2`
+# export OLDUUID=`cat /etc/fstab | grep /boot | awk '{print $1}' | cut -d '=' -f 2`
+# sed -i.org -e "s/UUID=${OLDUUID}/UUID=${NEWUUID}/g" /etc/fstab
+
+# /sbin/grub2-mkconfig -o /boot/grub2/grub.cfg; echo $?
+
+# /sbin/grub2-install /dev/nvme0n3; echo $?
+
+# exit
+
+# shutdown -r now
